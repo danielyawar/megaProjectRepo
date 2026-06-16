@@ -1,0 +1,103 @@
+public class LinkedQueue<T> implements QueueInterface<T> {
+	
+	protected Node firstNode;
+	protected Node lastNode; 
+
+	public LinkedQueue() {
+		firstNode = null;
+		lastNode = null;
+	} 
+
+	public boolean hasConsecutiveHelper(Node current) {
+		if(current==null){
+			return false;
+		}
+		if(current.next==null){
+			return false;
+		}
+		if(current.data.equals(current.next.data)){
+			return true;
+		}
+		return hasConsecutiveHelper(current.next);
+	}
+
+	public boolean hasConsecutiveDuplicates() {
+		return hasConsecutiveHelper(firstNode);
+	}
+
+	public void enqueue(T element) {
+		Node newNode = new Node(element);
+
+		if (isEmpty()) {
+			firstNode = newNode;
+		} else {
+			lastNode.next = newNode;
+		}
+
+		lastNode = newNode;
+	}
+
+	public T getFront() {
+		if (isEmpty()) {
+			throw new EmptyQueueException();
+		} else {
+			return firstNode.data;
+		}
+	} 
+
+	public T dequeue() {
+		T front = getFront(); // will throw EmptyQueueException when empty
+							
+		// Assertion: firstNode != null
+		firstNode.data = null;
+		firstNode = firstNode.next;
+
+		if (firstNode == null) {
+			lastNode = null;
+		}
+
+		return front;
+	} 
+
+	public boolean isEmpty() {
+		return (firstNode == null) && (lastNode == null);
+	} 
+
+	public void clear() {	
+		while(firstNode!=null) {
+			firstNode.data = null;
+			firstNode = firstNode.next;
+		}
+		lastNode = null;
+	} 
+
+	public class Node {
+		public T data; 
+		public Node next; 
+
+		public Node(T data) {
+			this(data, null);
+		} 
+
+		private Node(T data, Node next) {
+			this.data = data;
+			this.next = next;
+		}
+
+		private T getData() {
+			return data;
+		} 
+
+		private void setData(T data) {
+			this.data = data;
+		} 
+
+		private Node getNext() {
+			return next;
+		} 
+
+		private void setNext(Node next) {
+			this.next = next;
+		} 
+	} 
+} 
